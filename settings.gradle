@@ -1,0 +1,6 @@
+rootProject.name = 'hosbee'
+
+include('hosbee-common')
+include('hosbee-admin-api')
+include('hosbee-user-api')
+include('hosbee-web-ui')
