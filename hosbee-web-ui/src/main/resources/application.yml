@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: hosbee-web-ui
+
+  profiles:
+    active: dev
+
+  mvc:
+    view:
+      prefix: /public/templates
+      suffix: .html
+
+  web:
+    resources:
+      static-locations: classpath:/static/, classpath:/public/
+
+  security:
+    user:
+      name: admin
+      password: admin123
+      roles: ADMIN
+
+server:
+  port: 80

@@ -1,2 +1,0 @@
-# hosbee
-hosbee's project

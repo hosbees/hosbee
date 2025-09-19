@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 메인 화면</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #1976D2;
+            --background-color: #f4f7f9;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            background-color: var(--card-background);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        /* 메인 컨테이너 (좌측 메뉴와 콘텐츠) */
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 20px auto;
+            gap: 20px;
+        }
+
+        /* 좌측 메뉴 스타일 */
+        .left-menu {
+            width: 250px;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            padding: 20px;
+        }
+
+        .left-menu h3 {
+            font-size: 20px;
+            color: var(--secondary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .left-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-menu ul li {
+            margin-bottom: 10px;
+        }
+
+        .left-menu ul li a {
+            display: block;
+            padding: 12px 15px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .left-menu ul li a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 메인 콘텐츠 영역 스타일 */
+        .content-area {
+            flex: 1;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            padding: 30px;
+        }
+
+        .content-area h2 {
+            font-size: 28px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        /* 푸터 스타일 */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                margin: 20px;
+            }
+
+            .left-menu {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">관리자 시스템</a>
+        <div>
+            <a href="#">로그아웃</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="left-menu">
+            <h3>대시보드</h3>
+            <ul>
+                <li><a href="#">회원 관리</a></li>
+                <li><a href="#">상품 관리</a></li>
+                <li><a href="#">주문 관리</a></li>
+                <li><a href="#">통계</a></li>
+                <li><a href="#">설정</a></li>
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            <h2>대시보드</h2>
+            <p>관리자 시스템에 오신 것을 환영합니다. 좌측 메뉴에서 원하는 항목을 선택해주세요.</p>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Admin Panel. All rights reserved.</p>
+    </footer>
+</body>
+</html>

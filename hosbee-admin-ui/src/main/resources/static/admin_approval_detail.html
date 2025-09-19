@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>승인 상세 - HOSBEE Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1E40AF;
+            --secondary-color: #3B82F6;
+            --accent-color: #06B6D4;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --error-color: #EF4444;
+            --background-color: #F8FAFC;
+            --surface-color: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .approval-detail {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .approval-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .approval-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .approval-type {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .approval-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .priority-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: white;
+        }
+
+        .priority-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: white;
+        }
+
+        .priority-low {
+            background: rgba(156, 163, 175, 0.2);
+            color: white;
+        }
+
+        .approval-body {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .approval-history {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .history-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--background-color);
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .history-icon.created {
+            background: var(--primary-color);
+        }
+
+        .history-icon.approved {
+            background: var(--success-color);
+        }
+
+        .history-icon.rejected {
+            background: var(--error-color);
+        }
+
+        .history-icon.assigned {
+            background: var(--warning-color);
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-action {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .history-time {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            min-width: 100px;
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #D97706;
+        }
+
+        /* Processing Form */
+        .processing-form {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            background: var(--background-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .breadcrumb {
+                padding: 0 1rem;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 2rem;
+                gap: 1rem;
+            }
+
+            .approval-header {
+                padding: 1.5rem;
+            }
+
+            .approval-title {
+                font-size: 1.5rem;
+            }
+
+            .approval-body, .processing-form {
+                padding: 1.5rem;
+            }
+
+            .sidebar-card {
+                padding: 1rem;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+
+            .info-value {
+                text-align: left;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="../index.html" class="logo">HOSBEE Admin</a>
+            <ul class="nav-links">
+                <li><a href="admin_main.html">대시보드</a></li>
+                <li><a href="admin_approvals.html" class="active">승인 관리</a></li>
+                <li><a href="admin_chart.html">통계</a></li>
+                <li><a href="admin_costomer.html">고객 관리</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="../index.html">홈</a>
+        <span class="breadcrumb-separator">></span>
+        <a href="admin_approvals.html">승인 관리</a>
+        <span class="breadcrumb-separator">></span>
+        <span>승인 상세</span>
+    </div>
+
+    <div id="mainContent">
+        <div class="loading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/admin';
+        let approvalId;
+        let currentApproval = null;
+        let approvalHistory = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            approvalId = urlParams.get('id');
+            
+            if (!approvalId) {
+                showError('승인 요청 ID가 제공되지 않았습니다.');
+                return;
+            }
+
+            loadApprovalDetail();
+        });
+
+        // Load approval detail
+        async function loadApprovalDetail() {
+            try {
+                const approvalResponse = await fetch(`${API_BASE_URL}/approvals/${approvalId}`);
+                if (!approvalResponse.ok) {
+                    throw new Error('승인 요청을 찾을 수 없습니다.');
+                }
+                currentApproval = await approvalResponse.json();
+
+                // Mock approval history (실제로는 API에서 가져와야 함)
+                approvalHistory = generateMockHistory();
+
+                renderApprovalDetail();
+            } catch (error) {
+                console.error('승인 요청 로딩 중 오류:', error);
+                showError('승인 요청을 불러오는 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Generate mock history
+        function generateMockHistory() {
+            const approval = currentApproval;
+            const history = [
+                {
+                    id: 1,
+                    action: 'created',
+                    title: '승인 요청 생성',
+                    details: `${approval.requesterName || '사용자'}가 승인을 요청했습니다.`,
+                    timestamp: approval.createdAt,
+                    user: approval.requesterName || '사용자'
+                }
+            ];
+
+            if (approval.assigneeName) {
+                history.push({
+                    id: 2,
+                    action: 'assigned',
+                    title: '담당자 배정',
+                    details: `${approval.assigneeName}에게 승인 요청이 배정되었습니다.`,
+                    timestamp: new Date(Date.now() - 3600000).toISOString(),
+                    user: '시스템'
+                });
+            }
+
+            if (approval.status === 'APPROVED') {
+                history.push({
+                    id: 3,
+                    action: 'approved',
+                    title: '승인 완료',
+                    details: '승인 요청이 승인되었습니다.',
+                    timestamp: new Date().toISOString(),
+                    user: approval.assigneeName || '관리자'
+                });
+            } else if (approval.status === 'REJECTED') {
+                history.push({
+                    id: 3,
+                    action: 'rejected',
+                    title: '승인 거절',
+                    details: '승인 요청이 거절되었습니다.',
+                    timestamp: new Date().toISOString(),
+                    user: approval.assigneeName || '관리자'
+                });
+            }
+
+            return history.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        }
+
+        // Render approval detail
+        function renderApprovalDetail() {
+            const approval = currentApproval;
+
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <div class="main-container">
+                    <div class="approval-detail">
+                        <div class="approval-header">
+                            <h1 class="approval-title">${approval.title || `승인 요청 #${approval.id}`}</h1>
+                            <div class="approval-type">
+                                <i class="fas fa-tag"></i>
+                                <span>${getRequestTypeText(approval.requestType)}</span>
+                                <span class="status-badge">${getStatusText(approval.status)}</span>
+                            </div>
+                            <div class="approval-meta">
+                                <div class="approval-info">
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">
+                                        요청자: ${approval.requesterName || '알 수 없음'}
+                                    </div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">
+                                        요청일: ${formatDate(approval.createdAt)}
+                                    </div>
+                                </div>
+                                <div class="priority-badge priority-${approval.priority?.toLowerCase()}">${getPriorityText(approval.priority)}</div>
+                            </div>
+                        </div>
+
+                        <div class="approval-body">
+                            <div class="section">
+                                <h2 class="section-title">
+                                    <i class="fas fa-file-alt"></i>
+                                    요청 내용
+                                </h2>
+                                <div class="section-content">
+                                    ${approval.description || '요청 내용이 없습니다.'}
+                                </div>
+                            </div>
+
+                            ${approval.details ? `
+                                <div class="section">
+                                    <h2 class="section-title">
+                                        <i class="fas fa-info-circle"></i>
+                                        상세 정보
+                                    </h2>
+                                    <div class="section-content">
+                                        ${formatText(approval.details)}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${approval.attachments ? `
+                                <div class="section">
+                                    <h2 class="section-title">
+                                        <i class="fas fa-paperclip"></i>
+                                        첨부 파일
+                                    </h2>
+                                    <div class="section-content">
+                                        ${approval.attachments.split(',').map(file =>
+                `<a href="${file.trim()}" target="_blank" class="attachment-link">
+                                                <i class="fas fa-download"></i>
+                                                ${file.trim().split('/').pop()}
+                                            </a>`
+            ).join('<br>')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <div class="section">
+                                <h2 class="section-title">
+                                    <i class="fas fa-history"></i>
+                                    처리 이력
+                                </h2>
+                                <div class="approval-history">
+                                    ${approvalHistory.map(item => `
+                                        <div class="history-item">
+                                            <div class="history-icon ${item.action}">
+                                                <i class="fas fa-${getHistoryIcon(item.action)}"></i>
+                                            </div>
+                                            <div class="history-content">
+                                                <div class="history-action">${item.title}</div>
+                                                <div class="history-details">${item.details}</div>
+                                                <div class="history-time">${formatDateTime(item.timestamp)} - ${item.user}</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        ${approval.status === 'PENDING' || approval.status === 'IN_REVIEW' ? `
+                            <div class="processing-form">
+                                <h2 class="section-title">
+                                    <i class="fas fa-gavel"></i>
+                                    승인 처리
+                                </h2>
+                                <form id="processingForm">
+                                    <div class="form-group">
+                                        <label class="form-label">처리 결과 *</label>
+                                        <select class="form-select" id="decision" required>
+                                            <option value="">선택하세요</option>
+                                            <option value="APPROVE">승인</option>
+                                            <option value="REJECT">거절</option>
+                                            <option value="REQUEST_MORE_INFO">추가 정보 요청</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">처리 의견</label>
+                                        <textarea class="form-textarea" id="comments" placeholder="승인/거절 사유나 추가 의견을 입력하세요"></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-secondary" onclick="goBack()">취소</button>
+                                        <button type="submit" class="btn-primary">처리하기</button>
+                                    </div>
+                                </form>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="sidebar">
+                        <div class="sidebar-card">
+                            <h3 class="sidebar-title">승인 정보</h3>
+                            <div class="info-row">
+                                <span class="info-label">상태</span>
+                                <span class="info-value">${getStatusText(approval.status)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">요청 타입</span>
+                                <span class="info-value">${getRequestTypeText(approval.requestType)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">우선순위</span>
+                                <span class="info-value">${getPriorityText(approval.priority)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">요청자</span>
+                                <span class="info-value">${approval.requesterName || '알 수 없음'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">요청일</span>
+                                <span class="info-value">${formatDate(approval.createdAt)}</span>
+                            </div>
+                            ${approval.assigneeName ? `
+                                <div class="info-row">
+                                    <span class="info-label">담당자</span>
+                                    <span class="info-value">${approval.assigneeName}</span>
+                                </div>
+                            ` : ''}
+                            ${approval.processedAt ? `
+                                <div class="info-row">
+                                    <span class="info-label">처리일</span>
+                                    <span class="info-value">${formatDate(approval.processedAt)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3 class="sidebar-title">빠른 액션</h3>
+                            ${approval.status === 'PENDING' || approval.status === 'IN_REVIEW' ? `
+                                <button class="btn-success" onclick="quickProcess('APPROVE')">
+                                    <i class="fas fa-check"></i>
+                                    빠른 승인
+                                </button>
+                                <button class="btn-danger" onclick="quickProcess('REJECT')">
+                                    <i class="fas fa-times"></i>
+                                    빠른 거절
+                                </button>
+                                <button class="btn-warning" onclick="assignToMe()">
+                                    <i class="fas fa-user"></i>
+                                    내게 배정
+                                </button>
+                                <button class="btn-secondary" onclick="escalateRequest()">
+                                    <i class="fas fa-arrow-up"></i>
+                                    상급자 전달
+                                </button>
+                            ` : ''}
+                            <a href="admin_approvals.html" class="btn-secondary">
+                                <i class="fas fa-list"></i>
+                                목록으로
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Setup form event listener
+            const processingForm = document.getElementById('processingForm');
+            if (processingForm) {
+                processingForm.addEventListener('submit', handleProcessingSubmit);
+            }
+        }
+
+        // Handle processing form submission
+        async function handleProcessingSubmit(e) {
+            e.preventDefault();
+            
+            const decision = document.getElementById('decision').value;
+            const comments = document.getElementById('comments').value;
+
+            if (!decision) {
+                alert('처리 결과를 선택해주세요.');
+                return;
+            }
+
+            await processApproval(decision, comments);
+        }
+
+        // Process approval
+        async function processApproval(decision, comments = '') {
+            try {
+                let url, method, body;
+
+                if (decision === 'APPROVE') {
+                    url = `${API_BASE_URL}/approvals/${approvalId}/approve`;
+                    body = { comments };
+                } else if (decision === 'REJECT') {
+                    url = `${API_BASE_URL}/approvals/${approvalId}/reject`;
+                    body = { reason: comments };
+                } else if (decision === 'REQUEST_MORE_INFO') {
+                    url = `${API_BASE_URL}/approvals/${approvalId}/request-info`;
+                    body = { message: comments };
+                }
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (response.ok) {
+                    alert('처리가 완료되었습니다.');
+                    loadApprovalDetail(); // Reload to show updated status
+                } else {
+                    const error = await response.text();
+                    alert('처리 중 오류가 발생했습니다: ' + error);
+                }
+            } catch (error) {
+                console.error('승인 처리 중 오류:', error);
+                alert('처리 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Quick process
+        async function quickProcess(decision) {
+            const message = decision === 'APPROVE' ? '이 요청을 승인하시겠습니까?' : '이 요청을 거절하시겠습니까?';
+            
+            if (confirm(message)) {
+                await processApproval(decision);
+            }
+        }
+
+        // Assign to me
+        async function assignToMe() {
+            if (confirm('이 요청을 본인에게 배정하시겠습니까?')) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/approvals/${approvalId}/assign`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ approverId: 'current_user' }) // 실제로는 현재 사용자 ID
+                    });
+
+                    if (response.ok) {
+                        alert('요청이 배정되었습니다.');
+                        loadApprovalDetail();
+                    } else {
+                        alert('배정 중 오류가 발생했습니다.');
+                    }
+                } catch (error) {
+                    console.error('배정 중 오류:', error);
+                    alert('배정 중 오류가 발생했습니다.');
+                }
+            }
+        }
+
+        // Escalate request
+        async function escalateRequest() {
+            if (confirm('이 요청을 상급자에게 전달하시겠습니까?')) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/approvals/${approvalId}/escalate`, {
+                        method: 'POST'
+                    });
+
+                    if (response.ok) {
+                        alert('요청이 상급자에게 전달되었습니다.');
+                        loadApprovalDetail();
+                    } else {
+                        alert('전달 중 오류가 발생했습니다.');
+                    }
+                } catch (error) {
+                    console.error('전달 중 오류:', error);
+                    alert('전달 중 오류가 발생했습니다.');
+                }
+            }
+        }
+
+        // Go back
+        function goBack() {
+            window.history.back();
+        }
+
+        // Show error
+        function showError(message) {
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>오류 발생</h3>
+                    <p>${message}</p>
+                    <a href="admin_approvals.html" class="btn-primary" style="margin-top: 1rem;">
+                        승인 목록으로
+                    </a>
+                </div>
+            `;
+        }
+
+        // Utility functions
+        function getStatusText(status) {
+            const statusMap = {
+                'PENDING': '대기중',
+                'IN_REVIEW': '검토중',
+                'APPROVED': '승인됨',
+                'REJECTED': '거절됨',
+                'CANCELLED': '취소됨'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getRequestTypeText(type) {
+            const typeMap = {
+                'PROJECT_APPROVAL': '프로젝트 승인',
+                'USER_REGISTRATION': '사용자 등록',
+                'PAYMENT_AUTHORIZATION': '결제 승인',
+                'CONTENT_MODERATION': '콘텐츠 검토',
+                'SYSTEM_ACCESS': '시스템 접근'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'LOW': '낮음',
+                'MEDIUM': '보통',
+                'HIGH': '높음'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        function getHistoryIcon(action) {
+            const iconMap = {
+                'created': 'plus',
+                'approved': 'check',
+                'rejected': 'times',
+                'assigned': 'user'
+            };
+            return iconMap[action] || 'circle';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatDateTime(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function formatText(text) {
+            if (!text) return '';
+            return text.replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+</html>
