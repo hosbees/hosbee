@@ -21,8 +21,6 @@ hosbee/
 - **Java 17**
 - **Spring Boot 3.4.3**
 - **Spring Security**
-- **Spring Data JPA**
-- **H2 Database** (Development)
 - **MySQL** (Production)
 - **Lombok**
 - **Jackson** (JSON Processing)
