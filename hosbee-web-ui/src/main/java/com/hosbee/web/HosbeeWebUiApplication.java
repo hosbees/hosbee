@@ -3,7 +3,7 @@ package com.hosbee.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.hosbee.web"})
 public class HosbeeWebUiApplication {
 
     public static void main(String[] args) {

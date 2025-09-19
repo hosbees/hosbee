@@ -1,3 +1,20 @@
+server:
+  port: 9031
+
 spring:
   application:
     name: hosbee-admin-api
+
+  datasource:
+    url: jdbc:h2:mem:hosbee
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect

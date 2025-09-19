@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>승인 통계 - HOSBEE Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #1E40AF;
+            --secondary-color: #3B82F6;
+            --accent-color: #06B6D4;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --error-color: #EF4444;
+            --background-color: #F8FAFC;
+            --surface-color: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Date Filter */
+        .date-filter {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .filter-input, .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-color);
+        }
+
+        .stat-card.pending::before {
+            background: var(--warning-color);
+        }
+
+        .stat-card.approved::before {
+            background: var(--success-color);
+        }
+
+        .stat-card.rejected::before {
+            background: var(--error-color);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.total {
+            background: var(--primary-color);
+        }
+
+        .stat-icon.pending {
+            background: var(--warning-color);
+        }
+
+        .stat-icon.approved {
+            background: var(--success-color);
+        }
+
+        .stat-icon.rejected {
+            background: var(--error-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+
+        .stat-change.negative {
+            color: var(--error-color);
+        }
+
+        .stat-change.neutral {
+            color: var(--text-muted);
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .chart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .chart-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .chart-body {
+            padding: 1.5rem;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Full Width Charts */
+        .full-width-chart {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .full-width-chart .chart-body {
+            height: 400px;
+        }
+
+        /* Performance Table */
+        .performance-section {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--background-color);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .performance-table th {
+            background: var(--background-color);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .performance-table tr:hover {
+            background: var(--background-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .metric-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .metric-excellent {
+            background: #D1FAE5;
+            color: var(--success-color);
+        }
+
+        .metric-good {
+            background: #FEF3C7;
+            color: var(--warning-color);
+        }
+
+        .metric-average {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .date-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .filter-input, .filter-select {
+                min-width: unset;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .chart-body {
+                height: 250px;
+            }
+
+            .full-width-chart .chart-body {
+                height: 300px;
+            }
+
+            .performance-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="../index.html" class="logo">HOSBEE Admin</a>
+            <ul class="nav-links">
+                <li><a href="admin_main.html">대시보드</a></li>
+                <li><a href="admin_approvals.html" class="active">승인 관리</a></li>
+                <li><a href="admin_chart.html">통계</a></li>
+                <li><a href="admin_costomer.html">고객 관리</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">승인 통계</h1>
+            <p class="page-subtitle">승인 요청 처리 현황과 성과를 분석하세요</p>
+        </div>
+
+        <div class="date-filter">
+            <div class="filter-group">
+                <label class="filter-label">기간</label>
+                <select class="filter-select" id="periodFilter">
+                    <option value="7">최근 7일</option>
+                    <option value="30" selected>최근 30일</option>
+                    <option value="90">최근 90일</option>
+                    <option value="365">최근 1년</option>
+                    <option value="custom">사용자 정의</option>
+                </select>
+            </div>
+            <div class="filter-group" id="customDateGroup" style="display: none;">
+                <label class="filter-label">시작일</label>
+                <input type="date" class="filter-input" id="startDate">
+            </div>
+            <div class="filter-group" id="customDateGroup2" style="display: none;">
+                <label class="filter-label">종료일</label>
+                <input type="date" class="filter-input" id="endDate">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">요청 타입</label>
+                <select class="filter-select" id="typeFilter">
+                    <option value="">전체</option>
+                    <option value="PROJECT_APPROVAL">프로젝트 승인</option>
+                    <option value="USER_REGISTRATION">사용자 등록</option>
+                    <option value="PAYMENT_AUTHORIZATION">결제 승인</option>
+                    <option value="CONTENT_MODERATION">콘텐츠 검토</option>
+                    <option value="SYSTEM_ACCESS">시스템 접근</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <button class="btn-secondary" onclick="applyFilters()">
+                    <i class="fas fa-search"></i>
+                    조회
+                </button>
+            </div>
+            <div style="margin-left: auto;">
+                <button class="btn-primary" onclick="exportData()">
+                    <i class="fas fa-download"></i>
+                    데이터 내보내기
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card total">
+                <div class="stat-icon total">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">총 요청</div>
+                <div class="stat-change positive" id="totalChange">+0%</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="pendingRequests">0</div>
+                <div class="stat-label">대기중</div>
+                <div class="stat-change neutral" id="pendingChange">+0%</div>
+            </div>
+            <div class="stat-card approved">
+                <div class="stat-icon approved">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="stat-number" id="approvedRequests">0</div>
+                <div class="stat-label">승인됨</div>
+                <div class="stat-change positive" id="approvedChange">+0%</div>
+            </div>
+            <div class="stat-card rejected">
+                <div class="stat-icon rejected">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="stat-number" id="rejectedRequests">0</div>
+                <div class="stat-label">거절됨</div>
+                <div class="stat-change negative" id="rejectedChange">+0%</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">승인 상태 분포</h3>
+                    <p class="chart-subtitle">현재 기간 내 승인 요청 상태별 비율</p>
+                </div>
+                <div class="chart-body">
+                    <canvas id="statusPieChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">요청 타입별 분포</h3>
+                    <p class="chart-subtitle">승인 요청 타입별 건수</p>
+                </div>
+                <div class="chart-body">
+                    <canvas id="typeDoughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="full-width-chart">
+            <div class="chart-header">
+                <h3 class="chart-title">승인 요청 추이</h3>
+                <p class="chart-subtitle">시간별 승인 요청 접수 및 처리 현황</p>
+            </div>
+            <div class="chart-body">
+                <canvas id="trendLineChart"></canvas>
+            </div>
+        </div>
+
+        <div class="performance-section">
+            <div class="section-header">
+                <h3 class="section-title">승인자 성과</h3>
+            </div>
+            <table class="performance-table">
+                <thead>
+                    <tr>
+                        <th>승인자</th>
+                        <th>처리 건수</th>
+                        <th>평균 처리 시간</th>
+                        <th>승인율</th>
+                        <th>성과 평가</th>
+                    </tr>
+                </thead>
+                <tbody id="performanceTableBody">
+                    <tr>
+                        <td colspan="5">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/admin';
+        let charts = {};
+        let currentFilters = {
+            period: 30,
+            type: ''
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadStatistics();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('periodFilter').addEventListener('change', function() {
+                const customGroups = document.querySelectorAll('[id^="customDateGroup"]');
+                if (this.value === 'custom') {
+                    customGroups.forEach(group => group.style.display = 'flex');
+                } else {
+                    customGroups.forEach(group => group.style.display = 'none');
+                }
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const period = document.getElementById('periodFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            currentFilters = {
+                period: period === 'custom' ? null : parseInt(period),
+                type: type,
+                startDate: period === 'custom' ? startDate : null,
+                endDate: period === 'custom' ? endDate : null
+            };
+
+            loadStatistics();
+        }
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                await Promise.all([
+                    loadOverviewStats(),
+                    loadChartData(),
+                    loadPerformanceData()
+                ]);
+            } catch (error) {
+                console.error('통계 로딩 중 오류:', error);
+            }
+        }
+
+        // Load overview statistics
+        async function loadOverviewStats() {
+            try {
+                // Mock data - 실제로는 API에서 가져와야 함
+                const stats = {
+                    total: 1247,
+                    pending: 89,
+                    approved: 1058,
+                    rejected: 100,
+                    changes: {
+                        total: 12.5,
+                        pending: -5.2,
+                        approved: 15.8,
+                        rejected: 8.3
+                    }
+                };
+
+                document.getElementById('totalRequests').textContent = stats.total.toLocaleString();
+                document.getElementById('pendingRequests').textContent = stats.pending.toLocaleString();
+                document.getElementById('approvedRequests').textContent = stats.approved.toLocaleString();
+                document.getElementById('rejectedRequests').textContent = stats.rejected.toLocaleString();
+
+                // Update change indicators
+                updateChangeIndicator('totalChange', stats.changes.total);
+                updateChangeIndicator('pendingChange', stats.changes.pending);
+                updateChangeIndicator('approvedChange', stats.changes.approved);
+                updateChangeIndicator('rejectedChange', stats.changes.rejected);
+            } catch (error) {
+                console.error('개요 통계 로딩 중 오류:', error);
+            }
+        }
+
+        // Update change indicator
+        function updateChangeIndicator(elementId, value) {
+            const element = document.getElementById(elementId);
+            const sign = value >= 0 ? '+' : '';
+            element.textContent = `${sign}${value}%`;
+            
+            if (value > 0) {
+                element.className = 'stat-change positive';
+            } else if (value < 0) {
+                element.className = 'stat-change negative';
+            } else {
+                element.className = 'stat-change neutral';
+            }
+        }
+
+        // Load chart data
+        async function loadChartData() {
+            try {
+                // Status Pie Chart
+                createStatusPieChart();
+                
+                // Type Doughnut Chart
+                createTypeDoughnutChart();
+                
+                // Trend Line Chart
+                createTrendLineChart();
+            } catch (error) {
+                console.error('차트 데이터 로딩 중 오류:', error);
+            }
+        }
+
+        // Create status pie chart
+        function createStatusPieChart() {
+            const ctx = document.getElementById('statusPieChart').getContext('2d');
+            
+            if (charts.statusPie) {
+                charts.statusPie.destroy();
+            }
+
+            charts.statusPie = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['승인됨', '대기중', '거절됨', '검토중'],
+                    datasets: [{
+                        data: [1058, 89, 100, 45],
+                        backgroundColor: [
+                            '#10B981',
+                            '#F59E0B',
+                            '#EF4444',
+                            '#3B82F6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create type doughnut chart
+        function createTypeDoughnutChart() {
+            const ctx = document.getElementById('typeDoughnutChart').getContext('2d');
+            
+            if (charts.typeDoughnut) {
+                charts.typeDoughnut.destroy();
+            }
+
+            charts.typeDoughnut = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['프로젝트 승인', '사용자 등록', '결제 승인', '콘텐츠 검토', '시스템 접근'],
+                    datasets: [{
+                        data: [456, 234, 189, 145, 123],
+                        backgroundColor: [
+                            '#1E40AF',
+                            '#06B6D4',
+                            '#10B981',
+                            '#F59E0B',
+                            '#EF4444'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    cutout: '50%'
+                }
+            });
+        }
+
+        // Create trend line chart
+        function createTrendLineChart() {
+            const ctx = document.getElementById('trendLineChart').getContext('2d');
+            
+            if (charts.trendLine) {
+                charts.trendLine.destroy();
+            }
+
+            // Generate mock data for the last 30 days
+            const labels = [];
+            const requestData = [];
+            const approvedData = [];
+            const rejectedData = [];
+
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }));
+                
+                // Mock data with some randomness
+                const requests = Math.floor(Math.random() * 50) + 20;
+                const approved = Math.floor(requests * (0.7 + Math.random() * 0.2));
+                const rejected = requests - approved;
+                
+                requestData.push(requests);
+                approvedData.push(approved);
+                rejectedData.push(rejected);
+            }
+
+            charts.trendLine = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '총 요청',
+                            data: requestData,
+                            borderColor: '#1E40AF',
+                            backgroundColor: 'rgba(30, 64, 175, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '승인됨',
+                            data: approvedData,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: '거절됨',
+                            data: rejectedData,
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        // Load performance data
+        async function loadPerformanceData() {
+            try {
+                // Mock performance data
+                const performanceData = [
+                    { name: '김관리자', processed: 156, avgTime: '2.3시간', approvalRate: 0.92, performance: 'excellent' },
+                    { name: '박승인자', processed: 143, avgTime: '1.8시간', approvalRate: 0.89, performance: 'excellent' },
+                    { name: '이검토자', processed: 128, avgTime: '3.1시간', approvalRate: 0.85, performance: 'good' },
+                    { name: '최처리자', processed: 97, avgTime: '4.2시간', approvalRate: 0.78, performance: 'good' },
+                    { name: '정승인자', processed: 89, avgTime: '5.1시간', approvalRate: 0.71, performance: 'average' }
+                ];
+
+                renderPerformanceTable(performanceData);
+            } catch (error) {
+                console.error('성과 데이터 로딩 중 오류:', error);
+            }
+        }
+
+        // Render performance table
+        function renderPerformanceTable(data) {
+            const tbody = document.getElementById('performanceTableBody');
+            
+            const html = data.map(user => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${user.name.charAt(0)}</div>
+                            <span>${user.name}</span>
+                        </div>
+                    </td>
+                    <td>${user.processed}건</td>
+                    <td>${user.avgTime}</td>
+                    <td>${(user.approvalRate * 100).toFixed(1)}%</td>
+                    <td>
+                        <span class="metric-badge metric-${user.performance}">
+                            ${getPerformanceText(user.performance)}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+
+            tbody.innerHTML = html;
+        }
+
+        // Get performance text
+        function getPerformanceText(performance) {
+            const performanceMap = {
+                'excellent': '우수',
+                'good': '양호',
+                'average': '보통'
+            };
+            return performanceMap[performance] || performance;
+        }
+
+        // Export data
+        function exportData() {
+            // Mock export functionality
+            alert('통계 데이터를 CSV 파일로 내보냅니다.');
+            
+            // 실제로는 다음과 같이 구현
+            // const data = gatherAllStatisticsData();
+            // const csv = convertToCSV(data);
+            // downloadCSV(csv, 'approval-statistics.csv');
+        }
+
+        // Utility function to download CSV
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
