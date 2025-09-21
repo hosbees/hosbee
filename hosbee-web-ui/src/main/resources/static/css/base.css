@@ -1,0 +1,21 @@
+/* 폰트 정의 */
+@font-face {
+  font-family: 'NanumBarunGothic';
+  src: url('../fonts/NanumBarunGothicLight.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('../fonts/NanumSquareRoundL.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 기본 폰트 설정 */
+* {
+  font-family: 'NanumBarunGothic', 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', sans-serif;
+}
