@@ -55,7 +55,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION}", "-f hosbee-admin-api/Dockerfile .")
-                            docker.withRegistry("https//${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -66,7 +66,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-admin-ui:${BUILD_VERSION}", "-f hosbee-admin-ui/Dockerfile .")
-                            docker.withRegistry("https//${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -77,7 +77,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-user-api:${BUILD_VERSION}", "-f hosbee-user-api/Dockerfile .")
-                            docker.withRegistry("https//${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -88,7 +88,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-web-ui:${BUILD_VERSION}", "-f hosbee-web-ui/Dockerfile .")
-                            docker.withRegistry("https//${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
