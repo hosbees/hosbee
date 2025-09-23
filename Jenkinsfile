@@ -10,7 +10,7 @@ pipeline {
     }
 
     tools {
-        gradle 'Gradle-7.x' // Jenkins에 설정된 Gradle 버전
+        gradle 'Gradle-8.5' // Jenkins에 설정된 Gradle 버전
     }
 
     stages {
