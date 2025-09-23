@@ -99,14 +99,7 @@ pipeline {
         }
 
         stage('Deploy to Development') {
-            when {
-                echo "Current branch: ${env.BRANCH_NAME}"
-                anyOf {
-                    branch 'develop'
-                    branch 'origin/develop'
-                    expression { env.BRANCH_NAME ==~ /.*develop.*/ }
-                }
-            }
+            
             steps {
                 echo "Current branch: ${env.BRANCH_NAME}"
                 echo "Git branch: ${sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()}"
