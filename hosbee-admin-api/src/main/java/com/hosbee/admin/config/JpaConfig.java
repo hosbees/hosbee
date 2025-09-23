@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EntityScan("com.hosbee.common.entity")
 @EnableJpaRepositories(basePackages = {
-    "com.hosbee.admin.repository",
     "com.hosbee.common.repository"
 })
 @EnableJpaAuditing
