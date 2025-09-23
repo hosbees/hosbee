@@ -100,9 +100,15 @@ pipeline {
 
         stage('Deploy to Development') {
             when {
-                branch 'develop'
+                anyOf {
+                    branch 'develop'
+                    branch 'origin/develop'
+                    expression { env.BRANCH_NAME ==~ /.*develop.*/ }
+                }
             }
             steps {
+                echo "Current branch: ${env.BRANCH_NAME}"
+                echo "Git branch: ${sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()}"
                 script {
                     // Docker Compose를 이용한 개발 환경 배포
                     sh """
