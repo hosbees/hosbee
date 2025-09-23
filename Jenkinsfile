@@ -4,7 +4,8 @@ pipeline {
     environment {
         GRADLE_OPTS = '-Dorg.gradle.daemon=false'
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
-        DOCKER_REGISTRY = 'your-registry.com' // 실제 Docker Registry URL로 변경
+        DOCKER_REGISTRY = 'https://hub.docker.com/repositories/hosbee001' // 실제 Docker Registry URL로 변경
+        // DOCKER_REGISTRY = 'localhost:5000' // 로컬 테스트용
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_COMMIT_SHORT = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
