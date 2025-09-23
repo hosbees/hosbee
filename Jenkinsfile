@@ -99,8 +99,8 @@ pipeline {
         }
 
         stage('Deploy to Development') {
-            echo "Current branch: ${env.BRANCH_NAME}"
             when {
+                echo "Current branch: ${env.BRANCH_NAME}"
                 anyOf {
                     branch 'develop'
                     branch 'origin/develop'
