@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 - HOSBEE</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .board-header {
+            background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Board Container */
+        .board-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .board-title {
+            margin-bottom: 30px;
+        }
+
+        .board-title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .board-title p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Board Controls */
+        .board-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .board-stats {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-select {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        .search-btn {
+            padding: 8px 16px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #f57c00;
+        }
+
+        .write-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .write-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Board Table */
+        .board-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: #f8f9fa;
+        }
+
+        .table th {
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .table tbody tr {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .post-title {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .post-title:hover {
+            color: #ff9800;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .post-author {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .badge-new {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .badge-hot {
+            background: #ff9500;
+            color: white;
+        }
+
+        .badge-notice {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 30px 0;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #e9ecef;
+            text-decoration: none;
+            color: #666;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        .pagination .current {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        .pagination .disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Categories */
+        .category-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .category-tab {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .board-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .search-group {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .table th:nth-child(3),
+            .table td:nth-child(3),
+            .table th:nth-child(4),
+            .table td:nth-child(4) {
+                display: none;
+            }
+
+            .table td {
+                padding: 10px 15px;
+            }
+
+            .category-tabs {
+                flex-wrap: wrap;
+            }
+
+            .header-nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff9800;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="board-header">
+        <div class="container">
+            <nav class="header-nav">
+                <a href="main.html" class="logo">HOSBEE</a>
+
+                <ul class="nav-links">
+                    <li><a href="main.html">홈</a></li>
+                    <li><a href="#" class="active">게시판</a></li>
+                    <li><a href="#">공지사항</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+
+                <div class="user-info">
+                    <div class="user-avatar">김</div>
+                    <span>김호스비님</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="board-container">
+        <!-- Board Title -->
+        <div class="board-title">
+            <h1>자유 게시판</h1>
+            <p>자유롭게 의견을 나누고 소통할 수 있는 공간입니다.</p>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <a href="#" class="category-tab active" data-category="all">전체</a>
+            <a href="#" class="category-tab" data-category="free">자유</a>
+            <a href="#" class="category-tab" data-category="question">질문</a>
+            <a href="#" class="category-tab" data-category="tip">팁/노하우</a>
+            <a href="#" class="category-tab" data-category="review">후기</a>
+            <a href="#" class="category-tab" data-category="notice">공지사항</a>
+        </div>
+
+        <!-- Board Controls -->
+        <div class="board-controls">
+            <div class="board-stats">
+                <span>총 <strong>1,247</strong>개의 게시글</span>
+                <span>오늘 <strong>32</strong>개의 새 글</span>
+            </div>
+
+            <div class="search-controls">
+                <div class="search-group">
+                    <select class="search-select" id="searchType">
+                        <option value="all">전체</option>
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="author">작성자</option>
+                    </select>
+                    <input type="text" class="search-input" placeholder="검색어를 입력하세요" id="searchInput">
+                    <button class="search-btn" onclick="searchPosts()">검색</button>
+                </div>
+                <a href="#" class="write-btn" onclick="showWriteForm()">글쓰기</a>
+            </div>
+        </div>
+
+        <!-- Board Table -->
+        <div class="board-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">번호</th>
+                        <th>제목</th>
+                        <th style="width: 120px;">작성자</th>
+                        <th style="width: 100px;">작성일</th>
+                        <th style="width: 80px;">조회</th>
+                        <th style="width: 80px;">추천</th>
+                    </tr>
+                </thead>
+                <tbody id="postList">
+                    <tr onclick="viewPost(1001)">
+                        <td><span class="badge badge-notice">공지</span></td>
+                        <td>
+                            <a href="#" class="post-title">HOSBEE 게시판 이용 안내</a>
+                            <div class="post-meta">
+                                <span>📌 필독</span>
+                                <span>댓글 15</span>
+                            </div>
+                        </td>
+                        <td class="post-author">관리자</td>
+                        <td>2024-01-15</td>
+                        <td>1,234</td>
+                        <td>89</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1002)">
+                        <td>1247</td>
+                        <td>
+                            <a href="#" class="post-title">HOSBEE 사용 후기 공유드립니다!</a>
+                            <span class="badge badge-hot">HOT</span>
+                            <div class="post-meta">
+                                <span>2시간 전</span>
+                                <span>댓글 23</span>
+                                <span>이미지 3</span>
+                            </div>
+                        </td>
+                        <td class="post-author">김호스비</td>
+                        <td>2024-01-20</td>
+                        <td>456</td>
+                        <td>34</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1003)">
+                        <td>1246</td>
+                        <td>
+                            <a href="#" class="post-title">초보자를 위한 HOSBEE 활용 팁</a>
+                            <span class="badge badge-new">NEW</span>
+                            <div class="post-meta">
+                                <span>3시간 전</span>
+                                <span>댓글 8</span>
+                            </div>
+                        </td>
+                        <td class="post-author">이팁공유</td>
+                        <td>2024-01-20</td>
+                        <td>178</td>
+                        <td>12</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1004)">
+                        <td>1245</td>
+                        <td>
+                            <a href="#" class="post-title">데이터 분석 기능 관련 질문입니다</a>
+                            <div class="post-meta">
+                                <span>5시간 전</span>
+                                <span>댓글 3</span>
+                            </div>
+                        </td>
+                        <td class="post-author">질문왕</td>
+                        <td>2024-01-20</td>
+                        <td>89</td>
+                        <td>5</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1005)">
+                        <td>1244</td>
+                        <td>
+                            <a href="#" class="post-title">HOSBEE 모바일 앱 언제 출시되나요?</a>
+                            <div class="post-meta">
+                                <span>어제</span>
+                                <span>댓글 15</span>
+                            </div>
+                        </td>
+                        <td class="post-author">모바일러</td>
+                        <td>2024-01-19</td>
+                        <td>234</td>
+                        <td>18</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1006)">
+                        <td>1243</td>
+                        <td>
+                            <a href="#" class="post-title">팀 협업 기능 너무 좋네요!</a>
+                            <div class="post-meta">
+                                <span>어제</span>
+                                <span>댓글 7</span>
+                            </div>
+                        </td>
+                        <td class="post-author">협업마스터</td>
+                        <td>2024-01-19</td>
+                        <td>156</td>
+                        <td>21</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1007)">
+                        <td>1242</td>
+                        <td>
+                            <a href="#" class="post-title">보안 관련 문의사항이 있습니다</a>
+                            <div class="post-meta">
+                                <span>2일 전</span>
+                                <span>댓글 2</span>
+                            </div>
+                        </td>
+                        <td class="post-author">보안신경</td>
+                        <td>2024-01-18</td>
+                        <td>67</td>
+                        <td>3</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1008)">
+                        <td>1241</td>
+                        <td>
+                            <a href="#" class="post-title">HOSBEE 커뮤니티 이벤트 제안</a>
+                            <div class="post-meta">
+                                <span>2일 전</span>
+                                <span>댓글 12</span>
+                            </div>
+                        </td>
+                        <td class="post-author">이벤트기획</td>
+                        <td>2024-01-18</td>
+                        <td>198</td>
+                        <td>25</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1009)">
+                        <td>1240</td>
+                        <td>
+                            <a href="#" class="post-title">신기능 업데이트 기대됩니다</a>
+                            <div class="post-meta">
+                                <span>3일 전</span>
+                                <span>댓글 9</span>
+                            </div>
+                        </td>
+                        <td class="post-author">기대맨</td>
+                        <td>2024-01-17</td>
+                        <td>123</td>
+                        <td>14</td>
+                    </tr>
+
+                    <tr onclick="viewPost(1010)">
+                        <td>1239</td>
+                        <td>
+                            <a href="#" class="post-title">HOSBEE와 함께한 1년 회고</a>
+                            <div class="post-meta">
+                                <span>3일 전</span>
+                                <span>댓글 18</span>
+                            </div>
+                        </td>
+                        <td class="post-author">1년유저</td>
+                        <td>2024-01-17</td>
+                        <td>345</td>
+                        <td>42</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#" class="disabled">‹‹</a>
+            <a href="#" class="disabled">‹</a>
+            <span class="current">1</span>
+            <a href="#" onclick="changePage(2)">2</a>
+            <a href="#" onclick="changePage(3)">3</a>
+            <a href="#" onclick="changePage(4)">4</a>
+            <a href="#" onclick="changePage(5)">5</a>
+            <span>...</span>
+            <a href="#" onclick="changePage(125)">125</a>
+            <a href="#" onclick="changePage(2)">›</a>
+            <a href="#" onclick="changePage(125)">››</a>
+        </div>
+    </div>
+
+    <script>
+        // 카테고리 탭 클릭 처리
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // 모든 탭의 active 클래스 제거
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+
+                // 클릭된 탭에 active 클래스 추가
+                this.classList.add('active');
+
+                // 카테고리 필터링
+                const category = this.dataset.category;
+                filterByCategory(category);
+            });
+        });
+
+        // 검색 기능
+        function searchPosts() {
+            const searchType = document.getElementById('searchType').value;
+            const searchTerm = document.getElementById('searchInput').value.trim();
+
+            if (!searchTerm) {
+                alert('검색어를 입력해주세요.');
+                return;
+            }
+
+            // 로딩 상태 표시
+            showLoading();
+
+            // 실제 검색 API 호출 시뮬레이션
+            setTimeout(() => {
+                // 검색 결과 표시
+                console.log(`검색 타입: ${searchType}, 검색어: ${searchTerm}`);
+                hideLoading();
+
+                // 검색 결과가 없을 경우
+                if (searchTerm === 'empty') {
+                    showEmptyState('검색 결과가 없습니다.');
+                }
+            }, 1000);
+        }
+
+        // 엔터 키로 검색
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPosts();
+            }
+        });
+
+        // 게시글 보기
+        function viewPost(postId) {
+            console.log(`게시글 ${postId} 보기`);
+            // 실제 구현에서는 게시글 상세 페이지로 이동
+            // window.location.href = `post-detail.html?id=${postId}`;
+            alert(`게시글 ${postId}번을 보려고 합니다.\n(실제 구현 시 상세 페이지로 이동)`);
+        }
+
+        // 글쓰기 폼 표시
+        function showWriteForm() {
+            console.log('글쓰기 폼 표시');
+            // 실제 구현에서는 글쓰기 페이지로 이동하거나 모달 표시
+            // window.location.href = 'post-write.html';
+            alert('글쓰기 페이지로 이동합니다.\n(실제 구현 시 글쓰기 페이지로 이동)');
+        }
+
+        // 페이지 변경
+        function changePage(page) {
+            console.log(`페이지 ${page}로 이동`);
+
+            // 로딩 상태 표시
+            showLoading();
+
+            // 페이지 데이터 로드 시뮬레이션
+            setTimeout(() => {
+                hideLoading();
+                updatePagination(page);
+            }, 500);
+        }
+
+        // 카테고리별 필터링
+        function filterByCategory(category) {
+            console.log(`카테고리 필터: ${category}`);
+
+            showLoading();
+
+            // 카테고리별 데이터 로드 시뮬레이션
+            setTimeout(() => {
+                hideLoading();
+
+                if (category === 'notice') {
+                    // 공지사항만 표시하는 예시
+                    console.log('공지사항 필터링');
+                }
+            }, 800);
+        }
+
+        // 로딩 상태 표시
+        function showLoading() {
+            const postList = document.getElementById('postList');
+            postList.innerHTML = `
+                <tr>
+                    <td colspan="6" class="loading">
+                        <div class="loading-spinner"></div>
+                        데이터를 불러오는 중...
+                    </td>
+                </tr>
+            `;
+        }
+
+        // 로딩 상태 숨기기
+        function hideLoading() {
+            // 실제 게시글 데이터를 다시 로드하는 로직
+            console.log('로딩 완료');
+        }
+
+        // 빈 상태 표시
+        function showEmptyState(message) {
+            const postList = document.getElementById('postList');
+            postList.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        <h3>😔</h3>
+                        <h3>${message}</h3>
+                        <p>다른 검색어로 다시 시도해보세요.</p>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // 페이지네이션 업데이트
+        function updatePagination(currentPage) {
+            // 페이지네이션 UI 업데이트 로직
+            console.log(`현재 페이지: ${currentPage}`);
+        }
+
+        // 실시간 검색 (디바운싱)
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const searchTerm = this.value.trim();
+
+            if (searchTerm.length >= 2) {
+                searchTimeout = setTimeout(() => {
+                    // 실시간 검색 API 호출
+                    console.log(`실시간 검색: ${searchTerm}`);
+                }, 500);
+            }
+        });
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 게시글 목록 로드
+            loadPosts();
+
+            // 통계 정보 업데이트
+            updateStats();
+        });
+
+        function loadPosts() {
+            console.log('게시글 목록 로드');
+            // 실제 API 호출 로직
+        }
+
+        function updateStats() {
+            console.log('통계 정보 업데이트');
+            // 실제 통계 API 호출 로직
+        }
+
+        // 게시글 추천/비추천
+        function toggleLike(postId, isLike) {
+            console.log(`게시글 ${postId} ${isLike ? '추천' : '비추천'}`);
+            // 추천/비추천 API 호출
+        }
+
+        // 무한 스크롤 (옵션)
+        let isLoading = false;
+        let currentPage = 1;
+
+        window.addEventListener('scroll', function() {
+            if (isLoading) return;
+
+            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                isLoading = true;
+                loadMorePosts();
+            }
+        });
+
+        function loadMorePosts() {
+            console.log('추가 게시글 로드');
+
+            setTimeout(() => {
+                // 추가 게시글 데이터 로드 및 표시
+                currentPage++;
+                isLoading = false;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
