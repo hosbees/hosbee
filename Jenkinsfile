@@ -98,40 +98,35 @@ pipeline {
             }
         }
 
-        stage('Deploy to Development') {
+        stage('Deploy') {
             steps {
                 script {
                     def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     env.CURRENT_BRANCH = currentBranch
-                }
-                echo "Current branch: ${env.CURRENT_BRANCH}"
-                echo "Jenkins BRANCH_NAME: ${env.BRANCH_NAME ?: 'null (use Multibranch Pipeline)'}"
-                script {
-                    // Docker Compose를 이용한 개발 환경 배포
-                    sh """
-                        export BUILD_VERSION=${BUILD_VERSION}
-                        export DOCKER_REGISTRY=${DOCKER_REGISTRY}
-                        docker compose -f docker-compose.dev.yml down
-                        docker compose -f docker-compose.dev.yml up -d
-                    """
-                }
-            }
-        }
+                    echo "Current branch: ${env.CURRENT_BRANCH}"
 
-        stage('Deploy to Production') {
-            when {
-                expression { env.CURRENT_BRANCH == 'main' }
-            }
-            steps {
-                input message: '운영환경에 배포하시겠습니까?', ok: 'Deploy'
-                script {
-                    // Kubernetes 배포 또는 Docker Swarm 배포
-                    sh """
-                        export BUILD_VERSION=${BUILD_VERSION}
-                        export DOCKER_REGISTRY=${DOCKER_REGISTRY}
-                        docker compose -f docker-compose.prod.yml down
-                        docker compose -f docker-compose.prod.yml up -d
-                    """
+                    if (env.CURRENT_BRANCH == 'main') {
+                        // 운영 환경 배포
+                        input message: '운영환경에 배포하시겠습니까?', ok: 'Deploy to Production'
+                        echo "Deploying to Production environment..."
+                        sh """
+                            export BUILD_VERSION=${BUILD_VERSION}
+                            export DOCKER_REGISTRY=${DOCKER_REGISTRY}
+                            docker compose -f docker-compose.prod.yml down
+                            docker compose -f docker-compose.prod.yml up -d
+                        """
+                        echo "Production deployment completed!"
+                    } else {
+                        // 개발 환경 배포
+                        echo "Deploying to Development environment..."
+                        sh """
+                            export BUILD_VERSION=${BUILD_VERSION}
+                            export DOCKER_REGISTRY=${DOCKER_REGISTRY}
+                            docker compose -f docker-compose.dev.yml down
+                            docker compose -f docker-compose.dev.yml up -d
+                        """
+                        echo "Development deployment completed!"
+                    }
                 }
             }
         }
