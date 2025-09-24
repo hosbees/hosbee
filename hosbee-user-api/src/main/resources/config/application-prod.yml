@@ -1,3 +1,6 @@
+server:
+  port: 9192
+
 spring:
   config:
     activate:

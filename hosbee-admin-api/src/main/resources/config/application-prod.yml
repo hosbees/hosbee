@@ -1,3 +1,6 @@
+server:
+  port: 9133
+
 spring:
   config:
     activate:

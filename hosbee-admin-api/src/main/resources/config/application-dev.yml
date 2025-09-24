@@ -1,3 +1,6 @@
+server:
+  port: 9130
+
 spring:
   config:
     activate:
