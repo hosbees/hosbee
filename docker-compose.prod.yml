@@ -61,7 +61,7 @@ services:
   hosbee-web-ui:
     image: ${DOCKER_REGISTRY}/hosbee-web-ui:${BUILD_VERSION:-latest}
     ports:
-      - "80:80"
+      - "443:443"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - USER_API_URL=http://hosbee-user-api:9092
