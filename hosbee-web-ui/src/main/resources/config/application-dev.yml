@@ -4,4 +4,4 @@ spring:
       on-profile: dev
 
 server:
-  port: 80
+  port: 8081

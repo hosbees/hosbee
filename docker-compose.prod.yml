@@ -61,7 +61,7 @@ services:
   hosbee-web-ui:
     image: ${DOCKER_REGISTRY}/hosbee-web-ui:${BUILD_VERSION:-latest}
     ports:
-      - "443:443"
+      - "80:80"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - USER_API_URL=http://hosbee-user-api:9092
@@ -72,7 +72,7 @@ services:
     networks:
       - hosbee-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:443/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:80/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -83,7 +83,6 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./ssl:/etc/nginx/ssl
     depends_on:
       - hosbee-web-ui
       - hosbee-admin-ui
