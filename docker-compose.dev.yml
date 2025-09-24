@@ -10,8 +10,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee_dev
       - SPRING_DATASOURCE_USERNAME=hb_dev
       - SPRING_DATASOURCE_PASSWORD=hosbee1!
-    depends_on:
-      - mysql
     networks:
       - hosbee-network
 
@@ -36,8 +34,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee_dev
       - SPRING_DATASOURCE_USERNAME=hb_dev
       - SPRING_DATASOURCE_PASSWORD=hosbee1!
-    depends_on:
-      - mysql
     networks:
       - hosbee-network
 
