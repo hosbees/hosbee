@@ -12,7 +12,7 @@ hosbee/
 ├── hosbee-admin-api/       # Administrative API service (Port: 9130, R: 9133)
 ├── hosbee-admin-ui/        # Administrative user interface (Port: 9030, R: 9033)
 ├── hosbee-user-api/        # User-facing API service (Port: 9092, R:9192)
-├── hosbee-web-ui/          # Web user interface (Port: 80, R: 433)
+├── hosbee-web-ui/          # Web user interface (Port: 8081, R: 80, 443)
 └── README.md
 ```
 
