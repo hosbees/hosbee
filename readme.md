@@ -1,6 +1,6 @@
 # Hosbee
 
-A multi-module Spring Boot application providing comprehensive hospital and healthcare management services.
+A multi-module Spring Boot application providing comprehensive management services.
 
 ## Project Structure
 
