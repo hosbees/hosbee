@@ -1,34 +1,16 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: hosbee
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_prod_data:/var/lib/mysql
-      - ./mysql/conf.d:/etc/mysql/conf.d
-    restart: unless-stopped
-    networks:
-      - hosbee-network
-
   hosbee-admin-api:
     image: ${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION:-latest}
     ports:
-      - "9031:9031"
+      - "9133:9133"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hosbee?useSSL=true&requireSSL=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=true&requireSSL=true
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JVM_OPTS=-Xms512m -Xmx1g
-    depends_on:
-      - mysql
     restart: unless-stopped
     networks:
       - hosbee-network
@@ -41,7 +23,7 @@ services:
   hosbee-admin-ui:
     image: ${DOCKER_REGISTRY}/hosbee-admin-ui:${BUILD_VERSION:-latest}
     ports:
-      - "9030:9030"
+      - "9033:9033"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - ADMIN_API_URL=http://hosbee-admin-api:9031
@@ -60,15 +42,13 @@ services:
   hosbee-user-api:
     image: ${DOCKER_REGISTRY}/hosbee-user-api:${BUILD_VERSION:-latest}
     ports:
-      - "9092:9092"
+      - "9192:9192"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hosbee?useSSL=true&requireSSL=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=true&requireSSL=true
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JVM_OPTS=-Xms512m -Xmx1g
-    depends_on:
-      - mysql
     restart: unless-stopped
     networks:
       - hosbee-network
@@ -110,9 +90,6 @@ services:
     restart: unless-stopped
     networks:
       - hosbee-network
-
-volumes:
-  mysql_prod_data:
 
 networks:
   hosbee-network:

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기 - HOSBEE</title>
+    <link rel="stylesheet" href="../assets/css/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .board-header {
+            background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .write-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .write-header {
+            margin-bottom: 30px;
+        }
+
+        .write-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .breadcrumb {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+
+        .write-form {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .form-select {
+            width: 200px;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #ff9800;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.6;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-textarea:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .file-upload {
+            border: 2px dashed #e9ecef;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #ff9800;
+            background: #fff8e1;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-text {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-hint {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .file-list {
+            margin-top: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .file-name {
+            color: #333;
+            font-size: 14px;
+        }
+
+        .file-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-outline:hover {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+            border: 2px solid #e9ecef;
+            border-bottom: none;
+        }
+
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+            transition: background 0.2s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: #e9ecef;
+        }
+
+        .toolbar-btn.active {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .write-container {
+                padding: 0 15px;
+            }
+
+            .write-form {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="board-header">
+        <div class="container">
+            <nav class="header-nav">
+                <a href="main.html" class="logo">HOSBEE</a>
+                <div class="nav-links">
+                    <a href="main.html">홈</a>
+                    <a href="board.html">게시판</a>
+                    <a href="profile.html">내 정보</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="write-container">
+        <div class="write-header">
+            <h1>새 글 작성</h1>
+            <div class="breadcrumb">
+                <a href="main.html">홈</a> > <a href="board.html">게시판</a> > 글쓰기
+            </div>
+        </div>
+
+        <form class="write-form" id="writeForm">
+            <div class="form-group">
+                <label class="form-label" for="category">카테고리</label>
+                <select id="category" name="category" class="form-select" required>
+                    <option value="">카테고리를 선택하세요</option>
+                    <option value="general">일반</option>
+                    <option value="notice">공지사항</option>
+                    <option value="qna">질문과 답변</option>
+                    <option value="tip">팁과 노하우</option>
+                    <option value="review">후기</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="title">제목</label>
+                <input type="text" id="title" name="title" class="form-input"
+                       placeholder="제목을 입력하세요" required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">내용</label>
+                <div class="editor-toolbar">
+                    <button type="button" class="toolbar-btn" onclick="formatText('bold')"><b>B</b></button>
+                    <button type="button" class="toolbar-btn" onclick="formatText('italic')"><i>I</i></button>
+                    <button type="button" class="toolbar-btn" onclick="formatText('underline')"><u>U</u></button>
+                    <button type="button" class="toolbar-btn" onclick="insertLink()">🔗</button>
+                </div>
+                <textarea id="content" name="content" class="form-textarea"
+                          placeholder="내용을 입력하세요..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">첨부파일</label>
+                <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx,.txt">
+                    <div class="file-upload-text">클릭하여 파일을 업로드하세요</div>
+                    <div class="file-upload-hint">이미지, PDF, 문서 파일을 업로드할 수 있습니다 (최대 10MB)</div>
+                </div>
+                <div class="file-list" id="fileList"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">글 등록</button>
+                <button type="button" class="btn btn-outline" onclick="saveDraft()">임시저장</button>
+                <a href="board.html" class="btn btn-secondary">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let uploadedFiles = [];
+
+        // 파일 업로드 처리
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+
+            files.forEach(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`${file.name}은(는) 파일 크기가 10MB를 초과합니다.`);
+                    return;
+                }
+
+                uploadedFiles.push(file);
+                addFileToList(file);
+            });
+
+            e.target.value = '';
+        });
+
+        function addFileToList(file) {
+            const fileList = document.getElementById('fileList');
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span class="file-name">${file.name} (${formatFileSize(file.size)})</span>
+                <button type="button" class="file-remove" onclick="removeFile('${file.name}')">삭제</button>
+            `;
+            fileList.appendChild(fileItem);
+        }
+
+        function removeFile(fileName) {
+            uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+
+            const fileItems = document.querySelectorAll('.file-item');
+            fileItems.forEach(item => {
+                if (item.querySelector('.file-name').textContent.includes(fileName)) {
+                    item.remove();
+                }
+            });
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 텍스트 포맷팅 (간단한 마크다운 스타일)
+        function formatText(format) {
+            const textarea = document.getElementById('content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+
+            if (!selectedText) {
+                alert('텍스트를 선택한 후 서식을 적용하세요.');
+                return;
+            }
+
+            let formattedText = '';
+            switch(format) {
+                case 'bold':
+                    formattedText = `**${selectedText}**`;
+                    break;
+                case 'italic':
+                    formattedText = `*${selectedText}*`;
+                    break;
+                case 'underline':
+                    formattedText = `__${selectedText}__`;
+                    break;
+            }
+
+            textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
+            textarea.focus();
+        }
+
+        function insertLink() {
+            const url = prompt('링크 URL을 입력하세요:');
+            if (url) {
+                const text = prompt('링크 텍스트를 입력하세요:', url);
+                const textarea = document.getElementById('content');
+                const linkText = `[${text}](${url})`;
+
+                const start = textarea.selectionStart;
+                textarea.value = textarea.value.substring(0, start) + linkText + textarea.value.substring(start);
+                textarea.focus();
+            }
+        }
+
+        // 임시저장
+        function saveDraft() {
+            const formData = {
+                category: document.getElementById('category').value,
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value,
+                files: uploadedFiles.map(f => f.name),
+                savedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('boardDraft', JSON.stringify(formData));
+            alert('임시저장되었습니다.');
+        }
+
+        // 임시저장된 내용 불러오기
+        function loadDraft() {
+            const draft = localStorage.getItem('boardDraft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                const loadConfirm = confirm('임시저장된 내용이 있습니다. 불러오시겠습니까?');
+
+                if (loadConfirm) {
+                    document.getElementById('category').value = data.category || '';
+                    document.getElementById('title').value = data.title || '';
+                    document.getElementById('content').value = data.content || '';
+                }
+            }
+        }
+
+        // 폼 제출 처리
+        document.getElementById('writeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const category = document.getElementById('category').value;
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+
+            if (!category) {
+                alert('카테고리를 선택해주세요.');
+                return;
+            }
+
+            if (!title) {
+                alert('제목을 입력해주세요.');
+                return;
+            }
+
+            if (!content) {
+                alert('내용을 입력해주세요.');
+                return;
+            }
+
+            // 실제 서버 전송 로직으로 교체 필요
+            const formData = new FormData();
+            formData.append('category', category);
+            formData.append('title', title);
+            formData.append('content', content);
+
+            uploadedFiles.forEach(file => {
+                formData.append('files', file);
+            });
+
+            // 로딩 표시
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '등록 중...';
+            submitBtn.disabled = true;
+
+            // 시뮬레이션
+            setTimeout(() => {
+                localStorage.removeItem('boardDraft');
+                alert('글이 성공적으로 등록되었습니다!');
+                window.location.href = 'board.html';
+            }, 1500);
+        });
+
+        // 페이지 로드 시 임시저장 내용 확인
+        window.addEventListener('load', loadDraft);
+
+        // 페이지 떠날 때 확인
+        window.addEventListener('beforeunload', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+
+            if (title || content) {
+                e.preventDefault();
+                e.returnValue = '작성 중인 내용이 있습니다. 정말로 페이지를 떠나시겠습니까?';
+            }
+        });
+    </script>
+</body>
+</html>

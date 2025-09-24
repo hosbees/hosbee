@@ -5,20 +5,18 @@ spring:
   profiles:
     active: dev
 
+  thymeleaf:
+    prefix: classpath:/templates/      # 템플릿 파일 경로
+    suffix: .html                      # 템플릿 파일 확장자
+    mode: HTML                         # 템플릿 모드
+    encoding: UTF-8                    # 인코딩
+    cache: false                       # 개발 중에는 false로 설정 (수정 즉시 반영)
+
   mvc:
     view:
-      prefix: /public/templates
+      prefix: /templates
       suffix: .html
 
   web:
     resources:
-      static-locations: classpath:/static/, classpath:/public/
-
-  security:
-    user:
-      name: admin
-      password: admin123
-      roles: ADMIN
-
-server:
-  port: 80
+      static-locations: classpath:/static/

@@ -1,0 +1,13 @@
+server:
+  port: 9133
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: hb_admin
+    password: hbadmin12#
+    driver-class-name: com.mysql.cj.jdbc.Driver

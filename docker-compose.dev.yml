@@ -1,31 +1,15 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: hosbee
-      MYSQL_USER: hosbee
-      MYSQL_PASSWORD: hosbee
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - hosbee-network
-
   hosbee-admin-api:
     image: ${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION:-latest}
     ports:
-      - "9031:9031"
+      - "9130:9130"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hosbee
-      - SPRING_DATASOURCE_USERNAME=hosbee
-      - SPRING_DATASOURCE_PASSWORD=hosbee
-    depends_on:
-      - mysql
+      - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee_dev
+      - SPRING_DATASOURCE_USERNAME=hb_dev
+      - SPRING_DATASOURCE_PASSWORD=hosbee1!
     networks:
       - hosbee-network
 
@@ -47,11 +31,9 @@ services:
       - "9092:9092"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hosbee
-      - SPRING_DATASOURCE_USERNAME=hosbee
-      - SPRING_DATASOURCE_PASSWORD=hosbee
-    depends_on:
-      - mysql
+      - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee_dev
+      - SPRING_DATASOURCE_USERNAME=hb_dev
+      - SPRING_DATASOURCE_PASSWORD=hosbee1!
     networks:
       - hosbee-network
 
@@ -66,9 +48,6 @@ services:
       - hosbee-user-api
     networks:
       - hosbee-network
-
-volumes:
-  mysql_data:
 
 networks:
   hosbee-network:

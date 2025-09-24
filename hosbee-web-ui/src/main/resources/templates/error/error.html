@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오류가 발생했습니다 - Hosbee</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #deb887 0%, #cd853f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-container {
+            text-align: center;
+            color: white;
+            max-width: 500px;
+            padding: 2rem;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .error-title {
+            font-size: 2rem;
+            margin: 1rem 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .error-message {
+            font-size: 1.1rem;
+            margin: 1.5rem 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .error-actions {
+            margin-top: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .error-details {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-align: left;
+        }
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">🚨</div>
+        <h1 class="error-code" th:text="${status}">Error</h1>
+        <h2 class="error-title">오류가 발생했습니다</h2>
+        <p class="error-message">
+            <span th:if="${status == 403}">접근 권한이 없습니다. 로그인 후 다시 시도해 주세요.</span>
+            <span th:if="${status == 400}">잘못된 요청입니다. 입력 정보를 확인해 주세요.</span>
+            <span th:if="${status == 401}">인증이 필요합니다. 로그인 후 다시 시도해 주세요.</span>
+            <span th:if="${status != 403 && status != 400 && status != 401}">
+                예기치 않은 오류가 발생했습니다.<br>
+                잠시 후 다시 시도해 주시거나 관리자에게 문의해 주세요.
+            </span>
+        </p>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">홈으로 돌아가기</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">이전 페이지</a>
+        </div>
+        <div class="error-details" th:if="${timestamp}">
+            <strong>HTTP 상태 코드:</strong> <span th:text="${status}">Unknown</span><br>
+            <strong>오류 발생 시간:</strong> <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}"></span><br>
+            <strong>요청 경로:</strong> <span th:text="${path}"></span><br>
+            <strong>오류 메시지:</strong> <span th:text="${message}" th:if="${message}">Unknown Error</span><br>
+            <div th:if="${trace}" style="margin-top: 1rem;">
+                <strong>상세 정보:</strong><br>
+                <pre style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap;" th:text="${trace}"></pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

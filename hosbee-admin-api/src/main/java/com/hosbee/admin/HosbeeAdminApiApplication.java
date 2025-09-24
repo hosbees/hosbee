@@ -5,13 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {
-    "com.hosbee.admin", 
-    "com.hosbee.common.service",
-    "com.hosbee.common.repository", 
-    "com.hosbee.common.entity",
-    "com.hosbee.common.dto"
-})
+@ComponentScan(basePackages = {"com.hosbee.admin", "com.hosbee.common"})
 public class HosbeeAdminApiApplication {
 
     public static void main(String[] args) {

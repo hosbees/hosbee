@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         GRADLE_OPTS = '-Dorg.gradle.daemon=false'
-        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk'
-        DOCKER_REGISTRY = 'your-registry.com' // 실제 Docker Registry URL로 변경
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
+        DOCKER_REGISTRY = 'localhost:5000' // 로컬 테스트용
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_COMMIT_SHORT = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
 
     tools {
-        gradle 'Gradle-7.x' // Jenkins에 설정된 Gradle 버전
+        gradle 'Gradle-8.5' // Jenkins에 설정된 Gradle 버전
     }
 
     stages {
@@ -25,6 +25,7 @@ pipeline {
 
         stage('Clean & Build') {
             steps {
+                sh 'chmod +x gradlew'
                 sh './gradlew clean build -x test'
             }
         }
@@ -35,9 +36,9 @@ pipeline {
             }
             post {
                 always {
-                    publishTestResults testResultsPattern: '**/build/test-results/test/*.xml'
+                    junit '**/build/test-results/test/*.xml'
                     publishHTML([
-                        allowMissing: false,
+                        allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
                         reportDir: 'build/reports/tests/test',
@@ -54,7 +55,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION}", "-f hosbee-admin-api/Dockerfile .")
-                            docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -65,7 +66,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-admin-ui:${BUILD_VERSION}", "-f hosbee-admin-ui/Dockerfile .")
-                            docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -76,7 +77,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-user-api:${BUILD_VERSION}", "-f hosbee-user-api/Dockerfile .")
-                            docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -87,7 +88,7 @@ pipeline {
                     steps {
                         script {
                             def image = docker.build("${DOCKER_REGISTRY}/hosbee-web-ui:${BUILD_VERSION}", "-f hosbee-web-ui/Dockerfile .")
-                            docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                            docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
                                 image.push()
                                 image.push('latest')
                             }
@@ -98,17 +99,20 @@ pipeline {
         }
 
         stage('Deploy to Development') {
-            when {
-                branch 'develop'
-            }
             steps {
+                script {
+                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    env.CURRENT_BRANCH = currentBranch
+                }
+                echo "Current branch: ${env.CURRENT_BRANCH}"
+                echo "Jenkins BRANCH_NAME: ${env.BRANCH_NAME ?: 'null (use Multibranch Pipeline)'}"
                 script {
                     // Docker Compose를 이용한 개발 환경 배포
                     sh """
                         export BUILD_VERSION=${BUILD_VERSION}
                         export DOCKER_REGISTRY=${DOCKER_REGISTRY}
-                        docker-compose -f docker-compose.dev.yml down
-                        docker-compose -f docker-compose.dev.yml up -d
+                        docker compose -f docker-compose.dev.yml down
+                        docker compose -f docker-compose.dev.yml up -d
                     """
                 }
             }
@@ -116,7 +120,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                branch 'main'
+                expression { env.CURRENT_BRANCH == 'main' }
             }
             steps {
                 input message: '운영환경에 배포하시겠습니까?', ok: 'Deploy'
@@ -125,8 +129,8 @@ pipeline {
                     sh """
                         export BUILD_VERSION=${BUILD_VERSION}
                         export DOCKER_REGISTRY=${DOCKER_REGISTRY}
-                        docker-compose -f docker-compose.prod.yml down
-                        docker-compose -f docker-compose.prod.yml up -d
+                        docker compose -f docker-compose.prod.yml down
+                        docker compose -f docker-compose.prod.yml up -d
                     """
                 }
             }

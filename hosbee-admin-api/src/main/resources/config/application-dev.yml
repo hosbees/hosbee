@@ -1,0 +1,13 @@
+server:
+  port: 9130
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:mysql://srv.hosbee.com:3306/hosbee_dev?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: hb_dev
+    password: hosbee1!
+    driver-class-name: com.mysql.cj.jdbc.Driver
