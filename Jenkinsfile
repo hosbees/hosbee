@@ -101,9 +101,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    // Jenkins 환경변수나 git 명령어로 브랜치명 확인
+                    def currentBranch = env.GIT_BRANCH ?: sh(script: 'git name-rev --name-only HEAD', returnStdout: true).trim()
+                    if (currentBranch.startsWith('origin/')) {
+                        currentBranch = currentBranch.replace('origin/', '')
+                    }
                     env.CURRENT_BRANCH = currentBranch
                     echo "Current branch: ${env.CURRENT_BRANCH}"
+                    echo "GIT_BRANCH env: ${env.GIT_BRANCH ?: 'not set'}"
 
                     if (env.CURRENT_BRANCH == 'main') {
                         // 운영 환경 배포
