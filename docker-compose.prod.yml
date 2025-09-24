@@ -23,7 +23,7 @@ services:
       - "9031:9031"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hosbee?useSSL=true&requireSSL=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=true&requireSSL=true
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JVM_OPTS=-Xms512m -Xmx1g
@@ -63,7 +63,7 @@ services:
       - "9092:9092"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hosbee?useSSL=true&requireSSL=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=true&requireSSL=true
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JVM_OPTS=-Xms512m -Xmx1g
