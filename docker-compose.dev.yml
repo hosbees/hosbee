@@ -4,7 +4,7 @@ services:
   hosbee-admin-api:
     image: ${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION:-latest}
     ports:
-      - "9031:9031"
+      - "9130:9130"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee_dev

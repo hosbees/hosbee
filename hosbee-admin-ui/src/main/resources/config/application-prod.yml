@@ -4,4 +4,4 @@ spring:
       on-profile: dev
 
 server:
-  port: 9031
+  port: 9033

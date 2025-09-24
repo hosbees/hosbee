@@ -4,7 +4,7 @@ services:
   hosbee-admin-api:
     image: ${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION:-latest}
     ports:
-      - "9031:9031"
+      - "9133:9133"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=true&requireSSL=true
@@ -25,7 +25,7 @@ services:
   hosbee-admin-ui:
     image: ${DOCKER_REGISTRY}/hosbee-admin-ui:${BUILD_VERSION:-latest}
     ports:
-      - "9030:9030"
+      - "9033:9033"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - ADMIN_API_URL=http://hosbee-admin-api:9031
@@ -44,7 +44,7 @@ services:
   hosbee-user-api:
     image: ${DOCKER_REGISTRY}/hosbee-user-api:${BUILD_VERSION:-latest}
     ports:
-      - "9092:9092"
+      - "9192:9192"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:mysql://srv.hosbee.com:3306/hosbee?useSSL=true&requireSSL=true

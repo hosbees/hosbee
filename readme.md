@@ -9,10 +9,10 @@ This project follows a microservices architecture with the following modules:
 ```
 hosbee/
 ├── hosbee-common/          # Shared utilities and common components
-├── hosbee-admin-api/       # Administrative API service (Port: 9031)
-├── hosbee-admin-ui/        # Administrative user interface (Port: 9030)
-├── hosbee-user-api/        # User-facing API service (Port: 9092)
-├── hosbee-web-ui/          # Web user interface (Port: 80)
+├── hosbee-admin-api/       # Administrative API service (Port: 9130, R: 9133)
+├── hosbee-admin-ui/        # Administrative user interface (Port: 9030, R: 9033)
+├── hosbee-user-api/        # User-facing API service (Port: 9092, R:9192)
+├── hosbee-web-ui/          # Web user interface (Port: 80, R: 433)
 └── README.md
 ```
 
