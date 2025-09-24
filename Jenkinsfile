@@ -99,10 +99,13 @@ pipeline {
         }
 
         stage('Deploy to Development') {
-            
             steps {
-                echo "Current branch: ${env.BRANCH_NAME}"
-                echo "Git branch: ${sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()}"
+                script {
+                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    env.CURRENT_BRANCH = currentBranch
+                }
+                echo "Current branch: ${env.CURRENT_BRANCH}"
+                echo "Jenkins BRANCH_NAME: ${env.BRANCH_NAME ?: 'null (use Multibranch Pipeline)'}"
                 script {
                     // Docker Compose를 이용한 개발 환경 배포
                     sh """
@@ -117,7 +120,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                branch 'main'
+                expression { env.CURRENT_BRANCH == 'main' }
             }
             steps {
                 input message: '운영환경에 배포하시겠습니까?', ok: 'Deploy'
