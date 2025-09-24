@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: hosbee
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_prod_data:/var/lib/mysql
-      - ./mysql/conf.d:/etc/mysql/conf.d
-    restart: unless-stopped
-    networks:
-      - hosbee-network
-
   hosbee-admin-api:
     image: ${DOCKER_REGISTRY}/hosbee-admin-api:${BUILD_VERSION:-latest}
     ports:
@@ -110,9 +94,6 @@ services:
     restart: unless-stopped
     networks:
       - hosbee-network
-
-volumes:
-  mysql_prod_data:
 
 networks:
   hosbee-network:
