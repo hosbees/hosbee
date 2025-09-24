@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페이지를 찾을 수 없습니다 - Hosbee</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ffd54f 0%, #d4a574 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-container {
+            text-align: center;
+            color: white;
+            max-width: 570px;
+            padding: 2rem;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .error-title {
+            font-size: 2rem;
+            margin: 1rem 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .error-message {
+            font-size: 1.1rem;
+            margin: 1.5rem 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .error-actions {
+            margin-top: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .error-details {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">페이지를 찾을 수 없습니다</h2>
+        <p class="error-message">
+            요청하신 페이지가 존재하지 않거나 이동되었습니다.<br>
+            URL을 다시 확인해 주시거나 아래 버튼을 이용해 다른 페이지로 이동해 주세요.
+        </p>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">홈으로 돌아가기</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">이전 페이지</a>
+        </div>
+        <div class="error-details">
+            <strong>오류 발생 시간:</strong> <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span><br>
+        </div>
+    </div>
+</body>
+</html>

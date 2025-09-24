@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세 - HOSBEE</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .board-header {
+            background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .breadcrumb {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+
+        /* Post Header */
+        .post-header {
+            background: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .post-category {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .post-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .author-info h4 {
+            margin: 0;
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .author-info span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Post Content */
+        .post-content {
+            background: white;
+            padding: 40px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-content p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .post-content h1, .post-content h2, .post-content h3 {
+            color: #333;
+            margin: 30px 0 15px 0;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid #ff9800;
+            background: #fff8e1;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .post-content code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e91e63;
+        }
+
+        .post-content pre {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+        }
+
+        .post-content ul, .post-content ol {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .post-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* Attachments */
+        .post-attachments {
+            background: white;
+            padding: 20px 30px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .attachments-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .attachment-item:hover {
+            background: #e9ecef;
+        }
+
+        .attachment-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .attachment-icon {
+            width: 24px;
+            height: 24px;
+            background: #ff9800;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .attachment-name {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .attachment-size {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .attachment-download {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+        }
+
+        .attachment-download:hover {
+            background: #f57c00;
+        }
+
+        /* Post Actions */
+        .post-actions {
+            background: white;
+            padding: 25px 30px;
+            border-top: 1px solid #e9ecef;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-like {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-like:hover, .btn-like.liked {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        .btn-share {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-share:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .post-navigation {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #f57c00;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        .btn-list {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-list:hover {
+            background: #5a6268;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            padding: 30px;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comments-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comments-count {
+            color: #ff9800;
+            font-weight: 600;
+        }
+
+        /* Comment Form */
+        .comment-form {
+            margin-bottom: 30px;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .comment-textarea:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .comment-info {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .btn-comment-submit {
+            background: #ff9800;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-comment-submit:hover {
+            background: #f57c00;
+        }
+
+        /* Comment List */
+        .comment-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .comment-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 0;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .comment-author-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .comment-date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .comment-content {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 42px;
+        }
+
+        .comment-reply-actions {
+            padding-left: 42px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .comment-reply-btn, .comment-like-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .comment-reply-btn:hover, .comment-like-btn:hover {
+            color: #ff9800;
+        }
+
+        /* Reply Comments */
+        .reply-comments {
+            margin-left: 40px;
+            margin-top: 15px;
+            border-left: 2px solid #f0f0f0;
+            padding-left: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .detail-container {
+                padding: 0 15px;
+            }
+
+            .post-header, .post-content, .post-attachments, .post-actions, .comments-section {
+                padding: 20px;
+            }
+
+            .post-title {
+                font-size: 22px;
+            }
+
+            .post-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .post-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons, .post-navigation {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="board-header">
+        <div class="container">
+            <nav class="header-nav">
+                <a href="main.html" class="logo">HOSBEE</a>
+                <div class="nav-links">
+                    <a href="main.html">홈</a>
+                    <a href="board.html">게시판</a>
+                    <a href="profile.html">내 정보</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="detail-container">
+        <div class="breadcrumb">
+            <a href="main.html">홈</a> > <a href="board.html">게시판</a> > 게시글 상세
+        </div>
+
+        <!-- Post Header -->
+        <div class="post-header">
+            <div class="post-category">팁과 노하우</div>
+            <h1 class="post-title">HOSBEE 서비스를 효과적으로 활용하는 10가지 방법</h1>
+            <div class="post-meta">
+                <div class="post-author">
+                    <div class="author-avatar">김</div>
+                    <div class="author-info">
+                        <h4>김호스비</h4>
+                        <span>2024.01.15 14:30</span>
+                    </div>
+                </div>
+                <div class="post-stats">
+                    <div class="stat-item">
+                        <span>👁️</span>
+                        <span>1,234</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>👍</span>
+                        <span>89</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>💬</span>
+                        <span>23</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post Content -->
+        <div class="post-content">
+            <p>안녕하세요! 오늘은 HOSBEE 서비스를 더욱 효과적으로 활용할 수 있는 다양한 팁들을 공유하려고 합니다.</p>
+
+            <h2>1. 프로필 설정 최적화</h2>
+            <p>먼저 프로필을 완성도 있게 설정하는 것이 중요합니다. 프로필 사진, 자기소개, 관심사 등을 상세히 입력하면 다른 사용자들과의 소통이 더욱 원활해집니다.</p>
+
+            <blockquote>
+                <p><strong>팁:</strong> 프로필 완성도가 높을수록 더 많은 기회를 얻을 수 있습니다!</p>
+            </blockquote>
+
+            <h2>2. 알림 설정 활용</h2>
+            <p>중요한 정보를 놓치지 않도록 알림 설정을 적절히 조정하세요. 다음과 같은 알림들을 추천합니다:</p>
+
+            <ul>
+                <li>새로운 메시지 알림</li>
+                <li>댓글 및 멘션 알림</li>
+                <li>시스템 공지사항 알림</li>
+                <li>주간 활동 요약 알림</li>
+            </ul>
+
+            <h2>3. 검색 기능 활용</h2>
+            <p>강력한 검색 기능을 통해 원하는 정보를 빠르게 찾을 수 있습니다. 검색 필터를 활용하면 더욱 정확한 결과를 얻을 수 있습니다.</p>
+
+            <pre><code>검색 예시:
+카테고리: 팁과 노하우
+작성자: 김호스비
+기간: 최근 1개월
+키워드: HOSBEE 활용법</code></pre>
+
+            <p>이런 식으로 활용하시면 HOSBEE 서비스를 더욱 효과적으로 이용하실 수 있을 것입니다. 궁금한 점이 있으시면 언제든 댓글로 문의해 주세요!</p>
+        </div>
+
+        <!-- Attachments -->
+        <div class="post-attachments">
+            <h3 class="attachments-title">첨부파일 (3개)</h3>
+            <div class="attachment-item">
+                <div class="attachment-info">
+                    <div class="attachment-icon">📄</div>
+                    <div>
+                        <div class="attachment-name">HOSBEE_활용가이드.pdf</div>
+                        <div class="attachment-size">2.5MB</div>
+                    </div>
+                </div>
+                <button class="attachment-download" onclick="downloadFile('guide.pdf')">다운로드</button>
+            </div>
+            <div class="attachment-item">
+                <div class="attachment-info">
+                    <div class="attachment-icon">🖼️</div>
+                    <div>
+                        <div class="attachment-name">프로필_설정_예시.png</div>
+                        <div class="attachment-size">856KB</div>
+                    </div>
+                </div>
+                <button class="attachment-download" onclick="downloadFile('profile.png')">다운로드</button>
+            </div>
+            <div class="attachment-item">
+                <div class="attachment-info">
+                    <div class="attachment-icon">📊</div>
+                    <div>
+                        <div class="attachment-name">활용_통계_자료.xlsx</div>
+                        <div class="attachment-size">1.2MB</div>
+                    </div>
+                </div>
+                <button class="attachment-download" onclick="downloadFile('stats.xlsx')">다운로드</button>
+            </div>
+        </div>
+
+        <!-- Post Actions -->
+        <div class="post-actions">
+            <div class="action-buttons">
+                <button class="btn btn-like" id="likeBtn" onclick="toggleLike()">
+                    <span>👍</span>
+                    <span id="likeCount">89</span>
+                </button>
+                <button class="btn btn-share" onclick="sharePost()">
+                    <span>🔗</span>
+                    <span>공유</span>
+                </button>
+            </div>
+            <div class="post-navigation">
+                <a href="board-write.html" class="btn btn-edit">수정</a>
+                <button class="btn btn-delete" onclick="deletePost()">삭제</button>
+                <a href="board.html" class="btn btn-list">목록</a>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <div class="comments-header">
+                <h3 class="comments-title">댓글 <span class="comments-count">23</span></h3>
+            </div>
+
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <textarea class="comment-textarea" placeholder="댓글을 입력하세요..." id="commentInput"></textarea>
+                <div class="comment-actions">
+                    <div class="comment-info">욕설, 비방 등은 삭제될 수 있습니다.</div>
+                    <button class="btn-comment-submit" onclick="submitComment()">댓글 작성</button>
+                </div>
+            </div>
+
+            <!-- Comment List -->
+            <ul class="comment-list">
+                <li class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="comment-avatar">박</div>
+                            <span class="comment-author-name">박개발자</span>
+                        </div>
+                        <span class="comment-date">2024.01.15 15:30</span>
+                    </div>
+                    <div class="comment-content">
+                        정말 유용한 정보네요! 특히 프로필 설정 부분이 도움이 많이 되었습니다. 감사합니다!
+                    </div>
+                    <div class="comment-reply-actions">
+                        <button class="comment-like-btn">
+                            <span>👍</span>
+                            <span>12</span>
+                        </button>
+                        <button class="comment-reply-btn">답글</button>
+                    </div>
+
+                    <!-- Reply Comments -->
+                    <div class="reply-comments">
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="comment-author">
+                                    <div class="comment-avatar">김</div>
+                                    <span class="comment-author-name">김호스비</span>
+                                </div>
+                                <span class="comment-date">2024.01.15 16:00</span>
+                            </div>
+                            <div class="comment-content">
+                                도움이 되셨다니 기쁩니다! 다음에도 더 좋은 정보로 찾아뵙겠습니다.
+                            </div>
+                            <div class="comment-reply-actions">
+                                <button class="comment-like-btn">
+                                    <span>👍</span>
+                                    <span>5</span>
+                                </button>
+                                <button class="comment-reply-btn">답글</button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="comment-avatar">이</div>
+                            <span class="comment-author-name">이사용자</span>
+                        </div>
+                        <span class="comment-date">2024.01.15 17:45</span>
+                    </div>
+                    <div class="comment-content">
+                        검색 기능 활용법이 특히 도움이 되었어요. 그런데 모바일에서도 동일하게 사용할 수 있나요?
+                    </div>
+                    <div class="comment-reply-actions">
+                        <button class="comment-like-btn">
+                            <span>👍</span>
+                            <span>8</span>
+                        </button>
+                        <button class="comment-reply-btn">답글</button>
+                    </div>
+                </li>
+
+                <li class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="comment-avatar">최</div>
+                            <span class="comment-author-name">최신입</span>
+                        </div>
+                        <span class="comment-date">2024.01.15 18:20</span>
+                    </div>
+                    <div class="comment-content">
+                        HOSBEE 초보자인데 이런 가이드가 정말 필요했어요. 첨부파일도 다운받아서 참고하겠습니다!
+                    </div>
+                    <div class="comment-reply-actions">
+                        <button class="comment-like-btn">
+                            <span>👍</span>
+                            <span>15</span>
+                        </button>
+                        <button class="comment-reply-btn">답글</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let isLiked = false;
+        let likeCount = 89;
+
+        // 좋아요 토글
+        function toggleLike() {
+            const likeBtn = document.getElementById('likeBtn');
+            const likeCountSpan = document.getElementById('likeCount');
+
+            isLiked = !isLiked;
+
+            if (isLiked) {
+                likeCount++;
+                likeBtn.classList.add('liked');
+            } else {
+                likeCount--;
+                likeBtn.classList.remove('liked');
+            }
+
+            likeCountSpan.textContent = likeCount;
+        }
+
+        // 게시글 공유
+        function sharePost() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'HOSBEE 서비스를 효과적으로 활용하는 10가지 방법',
+                    text: 'HOSBEE 서비스 활용 팁을 확인해보세요!',
+                    url: window.location.href
+                });
+            } else {
+                // 폴백: URL 복사
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('링크가 복사되었습니다!');
+                });
+            }
+        }
+
+        // 게시글 삭제
+        function deletePost() {
+            if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+                // 실제 삭제 로직으로 교체 필요
+                alert('게시글이 삭제되었습니다.');
+                window.location.href = 'board.html';
+            }
+        }
+
+        // 파일 다운로드
+        function downloadFile(filename) {
+            // 실제 파일 다운로드 로직으로 교체 필요
+            alert(`${filename} 다운로드를 시작합니다.`);
+        }
+
+        // 댓글 작성
+        function submitComment() {
+            const commentInput = document.getElementById('commentInput');
+            const content = commentInput.value.trim();
+
+            if (!content) {
+                alert('댓글 내용을 입력해주세요.');
+                return;
+            }
+
+            // 실제 댓글 등록 로직으로 교체 필요
+            alert('댓글이 등록되었습니다.');
+            commentInput.value = '';
+
+            // 댓글 목록 새로고침 (실제로는 AJAX로 처리)
+            location.reload();
+        }
+
+        // 댓글 좋아요/답글 기능
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('comment-like-btn') || e.target.parentElement.classList.contains('comment-like-btn')) {
+                const btn = e.target.classList.contains('comment-like-btn') ? e.target : e.target.parentElement;
+                const countSpan = btn.querySelector('span:last-child');
+                let count = parseInt(countSpan.textContent);
+
+                if (btn.classList.contains('liked')) {
+                    count--;
+                    btn.classList.remove('liked');
+                } else {
+                    count++;
+                    btn.classList.add('liked');
+                }
+
+                countSpan.textContent = count;
+            }
+
+            if (e.target.classList.contains('comment-reply-btn')) {
+                // 답글 폼 표시 로직
+                alert('답글 기능을 구현하세요.');
+            }
+        });
+
+        // 이미지 확대 보기
+        document.querySelectorAll('.post-content img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+                // 이미지 모달 표시 로직
+                window.open(this.src, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
